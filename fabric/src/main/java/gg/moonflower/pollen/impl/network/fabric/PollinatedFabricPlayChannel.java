@@ -4,6 +4,9 @@ import gg.moonflower.pollen.api.network.v1.PacketDeserializer;
 import gg.moonflower.pollen.api.network.v1.PollinatedPlayNetworkChannel;
 import gg.moonflower.pollen.api.network.v1.packet.PollinatedPacket;
 import gg.moonflower.pollen.api.network.v1.packet.PollinatedPacketDirection;
+import gg.moonflower.pollen.impl.mixin.ServerGamePacketListenerImplAccessor;
+import gg.moonflower.pollen.impl.mixin.client.ClientPacketListenerAccessor;
+import gg.moonflower.pollen.impl.mixin.ServerLoginPacketListenerImplAccessor;
 import gg.moonflower.pollen.impl.network.context.fabric.PollinatedFabricPlayPacketContext;
 import gg.moonflower.pollen.impl.registry.network.PollinatedNetworkRegistryImpl;
 import gg.moonflower.pollen.impl.registry.network.fabric.PollinatedNetworkRegistryImplImpl;
@@ -43,11 +46,11 @@ public class PollinatedFabricPlayChannel extends PollinatedNetworkChannelImpl im
     }
 
     private void processClientPlay(PacketListener listener, FriendlyByteBuf data, PacketSender responseSender) {
-        PollinatedNetworkRegistryImpl.processMessage(this.deserialize(data, PollinatedPacketDirection.PLAY_CLIENTBOUND), new PollinatedFabricPlayPacketContext(listener.getConnection(), pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, PollinatedPacketDirection.PLAY_SERVERBOUND))), PollinatedPacketDirection.PLAY_CLIENTBOUND), this.clientMessageHandler);
+        PollinatedNetworkRegistryImpl.processMessage(this.deserialize(data, PollinatedPacketDirection.PLAY_CLIENTBOUND), new PollinatedFabricPlayPacketContext(((ClientPacketListenerAccessor)listener).getConnection(), pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, PollinatedPacketDirection.PLAY_SERVERBOUND))), PollinatedPacketDirection.PLAY_CLIENTBOUND), this.clientMessageHandler);
     }
 
     private void processServerPlay(MinecraftServer server, ServerPlayer player, ServerGamePacketListenerImpl listener, FriendlyByteBuf data, PacketSender responseSender) {
-        PollinatedNetworkRegistryImpl.processMessage(this.deserialize(data, PollinatedPacketDirection.PLAY_SERVERBOUND), new PollinatedFabricPlayPacketContext(listener.getConnection(), pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, PollinatedPacketDirection.PLAY_CLIENTBOUND))), PollinatedPacketDirection.PLAY_SERVERBOUND), this.serverMessageHandler);
+        PollinatedNetworkRegistryImpl.processMessage(this.deserialize(data, PollinatedPacketDirection.PLAY_SERVERBOUND), new PollinatedFabricPlayPacketContext(((ServerGamePacketListenerImplAccessor)listener).getConnection(), pkt -> responseSender.sendPacket(responseSender.createPacket(this.channelId, this.serialize(pkt, PollinatedPacketDirection.PLAY_CLIENTBOUND))), PollinatedPacketDirection.PLAY_SERVERBOUND), this.serverMessageHandler);
     }
 
     @Override

@@ -8,7 +8,6 @@ import gg.moonflower.pollen.core.network.play.PollenClientMessageHandlerImpl;
 import gg.moonflower.pollen.impl.particle.PollenParticles;
 import gg.moonflower.pollen.impl.render.animation.AnimationManagerImpl;
 import gg.moonflower.pollen.impl.render.geometry.GeometryModelManagerImpl;
-import gg.moonflower.pollen.impl.render.geometry.texture.GeometryTextureManagerImpl;
 import gg.moonflower.pollen.impl.render.particle.BedrockParticleManagerImpl;
 import gg.moonflower.pollen.impl.render.particle.instance.BedrockParticleEmitterImpl;
 import gg.moonflower.pollen.impl.render.particle.instance.BedrockParticleInstanceImpl;
@@ -18,7 +17,6 @@ public class PollenClient {
 
     public static void init() {
         GeometryModelManagerImpl.init();
-        GeometryTextureManagerImpl.init();
         BedrockParticleManagerImpl.init();
         AnimationManagerImpl.init();
         PollenShaderTypes.init();

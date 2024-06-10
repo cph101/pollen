@@ -56,7 +56,7 @@ public interface AnimationRuntime {
      * @return A new state animation controller
      */
     static StateAnimationController createState(AnimationState[] states, Entity entity) {
-        boolean client = entity.getLevel().isClientSide();
+        boolean client = entity.level().isClientSide();
         MolangRuntime.Builder builder = MolangRuntime.runtime();
         AnimationRuntime.addEntity(builder, entity, client);
         return createState(states, builder.create(), client);

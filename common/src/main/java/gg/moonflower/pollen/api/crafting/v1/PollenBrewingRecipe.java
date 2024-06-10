@@ -1,6 +1,7 @@
 package gg.moonflower.pollen.api.crafting.v1;
 
 import gg.moonflower.pollen.core.crafting.PollenBrewingRecipeImpl;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
@@ -35,7 +36,7 @@ public interface PollenBrewingRecipe extends Recipe<Container> {
     }
 
     @Override
-    default ItemStack assemble(Container container) {
+    default ItemStack assemble(Container container, RegistryAccess registryAccess) {
         return ItemStack.EMPTY;
     }
 
@@ -45,7 +46,7 @@ public interface PollenBrewingRecipe extends Recipe<Container> {
     }
 
     @Override
-    default ItemStack getResultItem() {
+    default ItemStack getResultItem(RegistryAccess registryAccess) {
         return ItemStack.EMPTY;
     }
 

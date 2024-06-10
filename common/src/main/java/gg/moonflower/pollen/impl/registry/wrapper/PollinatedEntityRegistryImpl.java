@@ -5,6 +5,9 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import gg.moonflower.pollen.api.registry.wrapper.v1.PollinatedEntityRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
@@ -29,10 +32,10 @@ public class PollinatedEntityRegistryImpl extends PollinatedRegistryImpl<EntityT
 
     public PollinatedEntityRegistryImpl(DeferredRegister<EntityType<?>> entityRegistry) {
         super(entityRegistry);
-        this.memoryModuleTypeRegistry = DeferredRegister.create(this.getModId(), Registry.MEMORY_MODULE_TYPE_REGISTRY);
-        this.sensorTypeRegistry = DeferredRegister.create(this.getModId(), Registry.SENSOR_TYPE_REGISTRY);
-        this.scheduleRegistry = DeferredRegister.create(this.getModId(), Registry.SCHEDULE_REGISTRY);
-        this.activityRegistry = DeferredRegister.create(this.getModId(), Registry.ACTIVITY_REGISTRY);
+        this.memoryModuleTypeRegistry = DeferredRegister.create(this.getModId(), Registries.MEMORY_MODULE_TYPE);
+        this.sensorTypeRegistry = DeferredRegister.create(this.getModId(), Registries.SENSOR_TYPE);
+        this.scheduleRegistry = DeferredRegister.create(this.getModId(), Registries.SCHEDULE);
+        this.activityRegistry = DeferredRegister.create(this.getModId(), Registries.ACTIVITY);
     }
 
 

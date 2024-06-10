@@ -5,9 +5,11 @@ import gg.moonflower.pollen.api.crafting.v1.PollenRecipeTypes;
 import gg.moonflower.pollen.api.platform.v1.Platform;
 import gg.moonflower.pollen.impl.extensions.GrindstoneMenuExtension;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.GrindstoneMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
@@ -36,6 +38,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu implemen
     @Final
     private Container resultSlots;
 
+    @Shadow @Final private ContainerLevelAccess access;
     @Nullable
     @Unique
     private PollenGrindstoneRecipe recipe;
@@ -60,10 +63,12 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu implemen
             RecipeManager recipeManager = recipeManagerOptional.get();
             Optional<PollenGrindstoneRecipe> optional = recipeManager.getRecipeFor(PollenRecipeTypes.GRINDSTONE_TYPE.get(), this.repairSlots, null);
             if (optional.isPresent()) {
-                this.recipe = optional.get();
-                this.resultSlots.setItem(0, this.recipe.assemble(this.repairSlots));
-                ci.cancel();
-                this.broadcastChanges();
+                this.access.execute((world, pos) -> {
+                    this.recipe = optional.get();
+                    this.resultSlots.setItem(0, this.recipe.assemble(this.repairSlots, world.registryAccess()));
+                    ci.cancel();
+                    this.broadcastChanges();
+                });
                 return;
             }
         }
@@ -80,7 +85,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu implemen
 
     @Override
     public void pollen_craft(Player player) {
-        NonNullList<ItemStack> nonNullList = player.level.getRecipeManager().getRemainingItemsFor(PollenRecipeTypes.GRINDSTONE_TYPE.get(), this.repairSlots, player.level);
+        NonNullList<ItemStack> nonNullList = player.level().getRecipeManager().getRemainingItemsFor(PollenRecipeTypes.GRINDSTONE_TYPE.get(), this.repairSlots, player.level());
 
         for (int i = 0; i < nonNullList.size(); ++i) {
             ItemStack itemStack = this.repairSlots.getItem(i);
@@ -93,7 +98,7 @@ public abstract class GrindstoneMenuMixin extends AbstractContainerMenu implemen
             if (!itemStack2.isEmpty()) {
                 if (itemStack.isEmpty()) {
                     this.repairSlots.setItem(i, itemStack2);
-                } else if (ItemStack.isSame(itemStack, itemStack2) && ItemStack.tagMatches(itemStack, itemStack2)) {
+                } else if (ItemStack.isSameItem(itemStack, itemStack2) && ItemStack.isSameItemSameTags(itemStack, itemStack2)) {
                     itemStack2.grow(itemStack.getCount());
                     this.repairSlots.setItem(i, itemStack2);
                 } else if (!player.getInventory().add(itemStack2)) {

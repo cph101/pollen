@@ -6,7 +6,10 @@
   "mixins": [
     "DispenserBlockAccessor",
     "PoiTypesAccessor",
+    "ServerGamePacketListenerImplAccessor",
+    "ServerLoginPacketListenerImplAccessor",
     "ServerPlayerMixin",
+    "client.ClientPacketListenerAccessor",
     "crafting.GrindstoneMenuMixin",
     "crafting.GrindstoneMenuRepairSlotMixin",
     "crafting.GrindstoneMenuResultSlotMixin",
@@ -14,8 +17,6 @@
   ],
   "client": [
     "client.ItemRendererMixin",
-    "client.Matrix3fAccessor",
-    "client.Matrix4fAccessor",
     "client.ParticleEngineMixin"
   ],
   "injectors": {

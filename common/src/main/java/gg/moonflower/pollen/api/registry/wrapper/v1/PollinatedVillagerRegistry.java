@@ -4,6 +4,7 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import gg.moonflower.pollen.impl.registry.wrapper.PollinatedVillagerRegistryImpl;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import net.minecraft.world.entity.npc.VillagerProfession;
 
@@ -12,7 +13,7 @@ import java.util.function.Supplier;
 public interface PollinatedVillagerRegistry extends PollinatedRegistry<VillagerProfession> {
 
     static PollinatedVillagerRegistry create(String modId) {
-        return new PollinatedVillagerRegistryImpl(DeferredRegister.create(modId, Registry.VILLAGER_PROFESSION_REGISTRY));
+        return new PollinatedVillagerRegistryImpl(DeferredRegister.create(modId, Registries.VILLAGER_PROFESSION));
     }
 
     /**

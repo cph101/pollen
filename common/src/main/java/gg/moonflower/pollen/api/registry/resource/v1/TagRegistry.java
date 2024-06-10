@@ -1,6 +1,7 @@
 package gg.moonflower.pollen.api.registry.resource.v1;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -29,19 +30,19 @@ public final class TagRegistry {
     }
 
     public static TagKey<Item> bindItem(ResourceLocation name) {
-        return bind(Registry.ITEM_REGISTRY, name);
+        return bind(BuiltInRegistries.ITEM, name);
     }
 
     public static TagKey<Block> bindBlock(ResourceLocation name) {
-        return bind(Registry.BLOCK_REGISTRY, name);
+        return bind(BuiltInRegistries.BLOCK, name);
     }
 
     public static TagKey<EntityType<?>> bindEntityType(ResourceLocation name) {
-        return bind(Registry.ENTITY_TYPE_REGISTRY, name);
+        return bind(BuiltInRegistries.ENTITY_TYPE, name);
     }
 
     public static TagKey<Fluid> bindFluid(ResourceLocation name) {
-        return bind(Registry.FLUID_REGISTRY, name);
+        return bind(BuiltInRegistries.FLUID, name);
     }
 }
 

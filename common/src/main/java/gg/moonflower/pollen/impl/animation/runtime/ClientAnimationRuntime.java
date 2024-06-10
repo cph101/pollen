@@ -97,10 +97,10 @@ public class ClientAnimationRuntime extends CommonAnimationRuntime {
         }
 
         // Level
-        if (entity.level instanceof ClientLevel clientLevel) {
+        if (entity.level() instanceof ClientLevel clientLevel) {
             builder.setQuery("actor_count", MolangExpression.of(() -> (float) clientLevel.getEntityCount()));
         }
-        builder.setQuery("time_of_day", MolangExpression.of(() -> entity.level.getTimeOfDay(Minecraft.getInstance().getFrameTime()) / 24_000L));
+        builder.setQuery("time_of_day", MolangExpression.of(() -> entity.level().getTimeOfDay(Minecraft.getInstance().getFrameTime()) / 24_000L));
 
         // Basic queries
         builder.setQuery("is_first_person", MolangExpression.of(() -> entity == Minecraft.getInstance().getCameraEntity() && Minecraft.getInstance().options.getCameraType() == CameraType.FIRST_PERSON));

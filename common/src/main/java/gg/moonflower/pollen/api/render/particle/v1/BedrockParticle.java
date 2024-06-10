@@ -10,10 +10,14 @@ import gg.moonflower.pollen.api.render.particle.v1.component.BedrockParticlePhys
 import gg.moonflower.pollen.api.render.particle.v1.listener.BedrockParticleListener;
 import gg.moonflower.pollen.impl.particle.BedrockParticleOption;
 import gg.moonflower.pollen.impl.particle.PollenParticles;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.commands.arguments.ParticleArgument;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +44,7 @@ public interface BedrockParticle extends ParticleInstance, ParticleContext {
             return new BedrockParticleOption(PollenParticles.CUSTOM.get(), id);
         }
 
-        return ParticleArgument.readParticle(new StringReader(effect));
+        return ParticleArgument.readParticle(new StringReader(effect), Minecraft.getInstance().level.holderLookup(BuiltInRegistries.PARTICLE_TYPE.key()));
     }
 
     /**

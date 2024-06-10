@@ -68,12 +68,12 @@ public class CommonAnimationRuntime implements SidedAnimationRuntime {
             builder.setVariables(provider);
         }
 
-        builder.setQuery("day", MolangExpression.of(() -> (float) (entity.level.getDayTime() / 24000L + 1)));
-        builder.setQuery("moon_phase", MolangExpression.of(() -> (float) entity.level.getMoonPhase()));
-        builder.setQuery("moon_brightness", MolangExpression.of(() -> entity.level.getMoonBrightness()));
+        builder.setQuery("day", MolangExpression.of(() -> (float) (entity.level().getDayTime() / 24000L + 1)));
+        builder.setQuery("moon_phase", MolangExpression.of(() -> (float) entity.level().getMoonPhase()));
+        builder.setQuery("moon_brightness", MolangExpression.of(() -> entity.level().getMoonBrightness()));
 
         // Basic queries
-        builder.setQuery("is_on_ground", MolangExpression.of(entity::isOnGround));
+        builder.setQuery("is_on_ground", MolangExpression.of(entity::onGround));
         builder.setQuery("is_in_water", MolangExpression.of(entity::isInWater));
         builder.setQuery("is_in_water_or_rain", MolangExpression.of(entity::isInWaterOrRain));
         builder.setQuery("is_in_contact_with_water", MolangExpression.of(entity::isInWaterRainOrBubble));

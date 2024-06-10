@@ -7,12 +7,13 @@ import gg.moonflower.pollen.api.pinwheelbridge.v1.PinwheelBridge;
 import gg.moonflower.pollen.api.render.geometry.v1.GeometryAtlasTexture;
 import gg.moonflower.pollen.core.Pollen;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.SpriteLoader;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PathPackResources;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
@@ -37,6 +38,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -46,17 +48,19 @@ import java.util.stream.Stream;
  * @author Ocelot
  */
 @ApiStatus.Internal
-public class GeometryTextureSpriteUploader extends SimplePreparableReloadListener<TextureAtlas.Preparations> implements GeometryAtlasTexture, AutoCloseable {
+public class GeometryTextureSpriteUploader extends SimplePreparableReloadListener<SpriteLoader.Preparations> implements GeometryAtlasTexture, AutoCloseable {
 
     public static final ResourceLocation ATLAS_LOCATION = new ResourceLocation(Pollen.MOD_ID, "textures/atlas/geometry.png");
     private static final Pattern FROM_LOCATION = Pattern.compile("_");
     private static final Logger LOGGER = LogManager.getLogger();
     private final TextureAtlas textureAtlas;
     private final Set<ModelTexture> textures;
+    private final SpriteLoader spriteLoader;
 
     public GeometryTextureSpriteUploader(TextureManager textureManager) {
         this.textureAtlas = new TextureAtlas(ATLAS_LOCATION);
         this.textures = new HashSet<>();
+        this.spriteLoader = SpriteLoader.create(textureAtlas);
         textureManager.register(this.textureAtlas.location(), this.textureAtlas);
     }
 
@@ -75,12 +79,20 @@ public class GeometryTextureSpriteUploader extends SimplePreparableReloadListene
     }
 
     @Override
-    protected TextureAtlas.Preparations prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected SpriteLoader.Preparations prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         try (OnlineRepository onlineRepository = new OnlineRepository()) {
             profiler.startTick();
             profiler.push("stitching");
             ResourceManager onlineResources = new OnlineResourceManager(resourceManager, onlineRepository, this.textures.stream().filter(texture -> texture.type() == ModelTexture.Type.ONLINE).collect(Collectors.toSet()));
-            TextureAtlas.Preparations sheetData = this.textureAtlas.prepareToStitch(onlineResources, this.textures.stream().filter(texture -> texture.type() != ModelTexture.Type.UNKNOWN).map(texture -> PinwheelBridge.toLocation(texture.location())).distinct(), profiler, Minecraft.getInstance().options.mipmapLevels().get());
+            SpriteLoader.Preparations sheetData = new SpriteLoader.Preparations(
+                    textureAtlas.maxSupportedTextureSize(),
+                    textureAtlas.getWidth(),
+                    textureAtlas.getHeight(),
+                    textureAtlas.getSprite(this.getAtlasLocation()),
+                    this.textures.stream().filter(texture -> texture.type() != ModelTexture.Type.UNKNOWN).map(texture -> PinwheelBridge.toLocation(texture.location())).collect(Collectors.toMap(sprite -> sprite, this.textureAtlas::getSprite)),
+                    CompletableFuture.completedFuture(null)
+            );
+            sheetData.readyForUpload().complete(null);
             profiler.pop();
             profiler.endTick();
             return sheetData;
@@ -88,10 +100,10 @@ public class GeometryTextureSpriteUploader extends SimplePreparableReloadListene
     }
 
     @Override
-    protected void apply(TextureAtlas.Preparations sheetData, ResourceManager resourceManager, ProfilerFiller profiler) {
+    protected void apply(SpriteLoader.Preparations sheetData, ResourceManager resourceManager, ProfilerFiller profiler) {
         profiler.startTick();
         profiler.push("upload");
-        this.textureAtlas.reload(sheetData);
+        this.textureAtlas.upload(sheetData);
         profiler.pop();
         profiler.endTick();
     }
@@ -175,7 +187,7 @@ public class GeometryTextureSpriteUploader extends SimplePreparableReloadListene
 
         private Resource createResource(String url) {
             Pair<CompletableFuture<Path>, CompletableFuture<ResourceMetadata>> files = this.onlineLocations.get(url);
-            return new Resource("online", () -> read(files.getLeft()), () -> files.getRight().join());
+            return new Resource(this.listPacks().filter((pack) -> pack instanceof PathPackResources).findFirst().get(), () -> read(files.getLeft()), () -> files.getRight().join());
         }
 
         @Override

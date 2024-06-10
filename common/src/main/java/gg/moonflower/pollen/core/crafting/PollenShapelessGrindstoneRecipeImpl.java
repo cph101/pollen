@@ -6,6 +6,7 @@ import com.google.gson.JsonParseException;
 import gg.moonflower.pollen.api.crafting.v1.PollenRecipeTypes;
 import gg.moonflower.pollen.api.crafting.v1.PollenGrindstoneRecipe;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -103,7 +104,7 @@ public class PollenShapelessGrindstoneRecipeImpl implements PollenGrindstoneReci
     }
 
     @Override
-    public ItemStack assemble(Container container) {
+    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
         return this.result.copy();
     }
 
@@ -113,7 +114,7 @@ public class PollenShapelessGrindstoneRecipeImpl implements PollenGrindstoneReci
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public ItemStack getResultItem(RegistryAccess registryAccess) {
         return result;
     }
 

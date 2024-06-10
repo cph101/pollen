@@ -2,9 +2,10 @@ package gg.moonflower.pollen.impl.registry.wrapper;
 
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
-import dev.architectury.registry.registries.Registries;
+import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.registry.registries.RegistrySupplier;
 import gg.moonflower.pollen.api.registry.wrapper.v1.PollinatedRegistry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.Iterator;
@@ -24,7 +25,7 @@ public class PollinatedRegistryImpl<T> implements PollinatedRegistry<T> {
 
     protected PollinatedRegistryImpl(DeferredRegister<T> parent) {
         this.parent = parent;
-        this.modId = this.parent.getRegistries().getModId();
+        this.modId = this.parent.getRegistrarManager().getModId();
     }
 
     @Override
@@ -48,8 +49,8 @@ public class PollinatedRegistryImpl<T> implements PollinatedRegistry<T> {
     }
 
     @Override
-    public Registries getRegistries() {
-        return this.parent.getRegistries();
+    public RegistrarManager getRegistries() {
+        return this.parent.getRegistrarManager();
     }
 
     @Override

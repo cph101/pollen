@@ -28,7 +28,7 @@ dependencies {
 
     include(implementation("com.electronwill.night-config:core:${rootProject.nightconfig_version}"))
     include(implementation("com.electronwill.night-config:toml:${rootProject.nightconfig_version}"))
-    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${rootProject.mixinextras_version}")))
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${rootProject.mixinextras_version}")))
 
     // Pinwheel
     include(implementation("gg.moonflower.pinwheel:pinwheel:${rootProject.pinwheel_version}"))
@@ -68,18 +68,12 @@ shadowJar {
 
     configurations = [project.configurations.shadowCommon]
     relocate "org.joml.joml", "gg.moonflower.pollen.joml"
-    classifier "dev-shadow"
 }
 
 remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
-}
-
-jar {
-    classifier "dev"
 }
 
 components.java {
@@ -91,7 +85,7 @@ components.java {
 publishing {
     publications {
         mavenFabric(MavenPublication) {
-            artifactId = project.archivesBaseName
+            artifactId = rootProject.archives_base_name + "-" + project.name
             from components.java
         }
     }

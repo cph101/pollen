@@ -5,6 +5,8 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import gg.moonflower.pollen.impl.registry.wrapper.PollinatedEntityRegistryImpl;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.sensing.Sensor;
@@ -26,7 +28,7 @@ import java.util.function.Supplier;
 public interface PollinatedEntityRegistry extends PollinatedRegistry<EntityType<?>> {
 
     static PollinatedEntityRegistry create(String modId) {
-        return new PollinatedEntityRegistryImpl(DeferredRegister.create(modId, Registry.ENTITY_TYPE_REGISTRY));
+        return new PollinatedEntityRegistryImpl(DeferredRegister.create(modId, Registries.ENTITY_TYPE));
     }
 
     /**

@@ -33,8 +33,8 @@ dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_major_version}.${rootProject.forge_minor_version}.${rootProject.forge_build_version}"
     modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
 
-    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${rootProject.mixinextras_version}"))
-    implementation(include("com.github.llamalad7.mixinextras:mixinextras-forge:${rootProject.mixinextras_version}"))
+    implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${rootProject.mixinextras_version}"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:${rootProject.mixinextras_version}"))
 
     // Pinwheel
     include(forgeRuntimeLibrary("gg.moonflower.pinwheel:pinwheel:${rootProject.pinwheel_version}"))
@@ -76,18 +76,18 @@ shadowJar {
 
     configurations = [project.configurations.shadowCommon]
     relocate "org.joml.joml", "gg.moonflower.pollen.joml"
-    classifier "dev-shadow"
+    //classifier "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    //classifier null
 }
 
-jar {
+/*jar {
     classifier "dev"
-}
+}*/
 
 components.java {
     withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
@@ -98,7 +98,7 @@ components.java {
 publishing {
     publications {
         mavenForge(MavenPublication) {
-            artifactId = project.archivesBaseName
+            artifactId = rootProject.archivesBaseName + "-" + project.name
             from components.java
         }
     }

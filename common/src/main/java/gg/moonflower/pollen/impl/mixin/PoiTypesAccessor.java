@@ -18,9 +18,4 @@ public interface PoiTypesAccessor {
     static Map<BlockState, Holder<PoiType>> getTypeByState() {
         return Pollen.expect();
     }
-
-    @Accessor("ALL_STATES")
-    static Set<BlockState> getAllStates() {
-        return Pollen.expect();
-    }
 }

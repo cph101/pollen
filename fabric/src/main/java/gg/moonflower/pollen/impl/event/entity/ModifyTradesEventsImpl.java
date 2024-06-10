@@ -5,6 +5,8 @@ import gg.moonflower.pollen.api.event.entity.v1.ModifyTradesEvents;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import org.apache.commons.lang3.Validate;
@@ -63,7 +65,7 @@ public class ModifyTradesEventsImpl {
     }
 
     private static void registerVillagerTrades() {
-        for (VillagerProfession prof : Registry.VILLAGER_PROFESSION) {
+        for (VillagerProfession prof : BuiltInRegistries.VILLAGER_PROFESSION) {
             Map<Integer, VillagerTrades.ItemListing[]> vanillaTrades = VANILLA_TRADES.get(prof);
             Map<Integer, ModifyTradesEvents.TradeRegistry> newTrades = new Int2ObjectOpenHashMap<>();
 
@@ -87,7 +89,7 @@ public class ModifyTradesEventsImpl {
             // Sanity check to make sure all tiers actually exist
             for (int i = minTier; i <= maxTier; i++) {
                 if (!newTrades.containsKey(i)) {
-                    LOGGER.warn(Registry.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + i + " didn't exist, adding");
+                    LOGGER.warn(BuiltInRegistries.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + i + " didn't exist, adding");
                     newTrades.put(i, new ModifyTradesEvents.TradeRegistry());
                 }
             }
@@ -103,7 +105,7 @@ public class ModifyTradesEventsImpl {
                     Validate.inclusiveBetween(minTier, maxTier, tier, "Tier must be between " + minTier + " and " + maxTier);
                     ModifyTradesEvents.TradeRegistry registry = newTrades.get(tier);
                     if (registry == null)
-                        throw new IllegalStateException("No registered " + Registry.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + tier + ". Valid tiers: " + newTrades.keySet().stream().sorted().map(i -> Integer.toString(i)).collect(Collectors.joining(", ")));
+                        throw new IllegalStateException("No registered " + BuiltInRegistries.VILLAGER_PROFESSION.getKey(prof) + " Villager Trades for tier: " + tier + ". Valid tiers: " + newTrades.keySet().stream().sorted().map(i -> Integer.toString(i)).collect(Collectors.joining(", ")));
                     return registry;
                 }
 

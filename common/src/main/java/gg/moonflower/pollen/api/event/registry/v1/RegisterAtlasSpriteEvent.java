@@ -4,7 +4,9 @@ import dev.architectury.event.Event;
 import gg.moonflower.pollen.impl.event.registry.RegisterAtlasSpriteEventImpl;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
@@ -32,5 +34,5 @@ public interface RegisterAtlasSpriteEvent {
      * @param atlas    The atlas to register into
      * @param registry The registry to add sprites into the texture
      */
-    void registerSprites(TextureAtlas atlas, Consumer<ResourceLocation> registry);
+    void registerSprites(TextureAtlas atlas, BiConsumer<ResourceLocation, ResourceManager> registry);
 }

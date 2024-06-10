@@ -12,7 +12,7 @@ public class PollinatedVillagerRegistryImplImpl {
     @org.jetbrains.annotations.ApiStatus.Internal
     public static void registerPoiStates(Holder<PoiType> holder, Set<BlockState> states) {
         states.forEach(state -> {
-            PoiTypesAccessor.getAllStates().add(state);
+            PoiTypesAccessor.getTypeByState().keySet().add(state);
             PoiTypesAccessor.getTypeByState().put(state, holder);
         });
     }

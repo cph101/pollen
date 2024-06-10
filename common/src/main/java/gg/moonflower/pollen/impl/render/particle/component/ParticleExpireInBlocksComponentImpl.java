@@ -5,6 +5,7 @@ import gg.moonflower.pinwheel.api.particle.component.ParticleExpireInBlocksCompo
 import gg.moonflower.pollen.api.render.particle.v1.BedrockParticle;
 import gg.moonflower.pollen.api.render.particle.v1.component.BedrockParticleTickComponent;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -29,12 +30,12 @@ public class ParticleExpireInBlocksComponentImpl extends BedrockParticleComponen
                 return null;
             }
 
-            if (!Registry.BLOCK.containsKey(id)) {
+            if (!BuiltInRegistries.BLOCK.containsKey(id)) {
                 LOGGER.error("Unknown block: " + name);
                 return null;
             }
 
-            return Registry.BLOCK.get(id);
+            return BuiltInRegistries.BLOCK.get(id);
         }).filter(Objects::nonNull).toArray(Block[]::new);
     }
 

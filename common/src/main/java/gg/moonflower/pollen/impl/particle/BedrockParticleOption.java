@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
@@ -42,7 +43,7 @@ public class BedrockParticleOption implements ParticleOptions {
 
     @Override
     public String writeToString() {
-        return Registry.PARTICLE_TYPE.getKey(this.getType()) + " " + this.name;
+        return BuiltInRegistries.PARTICLE_TYPE.getKey(this.getType()) + " " + this.name;
     }
 
     @Override

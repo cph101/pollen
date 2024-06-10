@@ -6,6 +6,7 @@ import gg.moonflower.pollen.core.Pollen;
 import gg.moonflower.pollen.core.crafting.PollenBrewingRecipeImpl;
 import gg.moonflower.pollen.core.crafting.PollenShapelessGrindstoneRecipeImpl;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
@@ -26,9 +27,9 @@ import java.util.function.Supplier;
 public final class PollenRecipeTypes {
 
     @ApiStatus.Internal
-    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Pollen.MOD_ID, Registry.RECIPE_SERIALIZER_REGISTRY);
+    public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(Pollen.MOD_ID, Registries.RECIPE_SERIALIZER);
     @ApiStatus.Internal
-    public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(Pollen.MOD_ID, Registry.RECIPE_TYPE_REGISTRY);
+    public static final DeferredRegister<RecipeType<?>> RECIPES = DeferredRegister.create(Pollen.MOD_ID, Registries.RECIPE_TYPE);
 
     public static final Supplier<RecipeType<PollenBrewingRecipe>> BREWING_TYPE = register("brewing");
     public static final Supplier<RecipeSerializer<PollenBrewingRecipe>> BREWING = RECIPE_SERIALIZERS.register("brewing", () -> createSerializer(PollenBrewingRecipeImpl::fromJson, PollenBrewingRecipeImpl::fromNetwork, PollenBrewingRecipeImpl::toNetwork));

@@ -4,6 +4,8 @@ import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import gg.moonflower.pollen.impl.registry.wrapper.PollinatedBlockRegistryImpl;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
@@ -19,7 +21,7 @@ import java.util.function.Supplier;
 public interface PollinatedBlockRegistry extends PollinatedRegistry<Block> {
 
     static PollinatedBlockRegistry create(DeferredRegister<Item> itemRegistry) {
-        return new PollinatedBlockRegistryImpl(DeferredRegister.create(itemRegistry.getRegistries().getModId(), Registry.BLOCK_REGISTRY), itemRegistry);
+        return new PollinatedBlockRegistryImpl(DeferredRegister.create(itemRegistry.getRegistrarManager().getModId(), ResourceKey.createRegistryKey(BuiltInRegistries.BLOCK.getDefaultKey())), itemRegistry);
     }
 
     /**

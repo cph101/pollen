@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexMultiConsumer;
-import com.mojang.math.Matrix4f;
 import gg.moonflower.molangcompiler.api.MolangEnvironment;
 import gg.moonflower.molangcompiler.api.MolangEnvironmentBuilder;
 import gg.moonflower.molangcompiler.api.bridge.MolangVariableProvider;
@@ -37,6 +36,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 import org.joml.Vector3dc;
 
 import java.util.*;
@@ -191,7 +191,7 @@ public class BedrockParticleInstanceImpl extends BedrockParticleImpl {
         float a = properties.getAlpha();
         int light = properties.getPackedLight();
 
-        Matrix4f matrix4f = JomlBridge.set(POSITION, MATRIX_STACK.position());
+        Matrix4f matrix4f = POSITION.set(MATRIX_STACK.position());
 
         consumer.vertex(matrix4f, -1.0F, -1.0F, 0.0F);
         consumer.uv(uMax, vMax);

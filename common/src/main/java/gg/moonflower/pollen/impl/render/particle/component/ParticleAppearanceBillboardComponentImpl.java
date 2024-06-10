@@ -1,6 +1,6 @@
 package gg.moonflower.pollen.impl.render.particle.component;
 
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import gg.moonflower.molangcompiler.api.MolangEnvironment;
 import gg.moonflower.molangcompiler.api.MolangExpression;
 import gg.moonflower.pinwheel.api.particle.component.ParticleAppearanceBillboardComponent;
@@ -46,7 +46,7 @@ public class ParticleAppearanceBillboardComponentImpl extends BedrockParticleCom
         this.data.textureSetter().setUV(this.particle, environment, renderProperties);
 
         switch (this.data.cameraMode()) {
-            case ROTATE_XYZ -> JomlBridge.set(renderProperties.getRotation(), camera.rotation());
+            case ROTATE_XYZ -> renderProperties.getRotation().set(camera.rotation());
             case ROTATE_Y ->
                     renderProperties.getRotation().setAngleAxis((float) -(camera.getYRot() * Math.PI / 180.0F), 0, 1, 0);
             case LOOK_AT_XYZ -> {
@@ -159,9 +159,9 @@ public class ParticleAppearanceBillboardComponentImpl extends BedrockParticleCom
         SingleQuadRenderProperties renderProperties = getRenderProperties(particle);
         switch (this.data.cameraMode()) {
             case EMITTER_TRANSFORM_XZ ->
-                    JomlBridge.set(renderProperties.getRotation(), Vector3f.XP.rotationDegrees(90));
+                    renderProperties.getRotation().set(Axis.XP.rotationDegrees(90));
             case EMITTER_TRANSFORM_YZ ->
-                    JomlBridge.set(renderProperties.getRotation(), Vector3f.YP.rotationDegrees(90));
+                    renderProperties.getRotation().set(Axis.YP.rotationDegrees(90));
         }
     }
 }

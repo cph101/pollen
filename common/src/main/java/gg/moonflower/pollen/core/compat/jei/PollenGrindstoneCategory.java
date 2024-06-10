@@ -14,7 +14,9 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -70,7 +72,7 @@ public class PollenGrindstoneCategory implements IRecipeCategory<PollenGrindston
                 builder.addSlot(RecipeIngredientRole.INPUT, 19, 25).addIngredients(ingredients.get(1)).setSlotName(BOTTOM_SLOT);
             }
         }
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 99, 19).addItemStack(recipe.getResultItem());
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 99, 19).addItemStack(recipe.getResultItem(RegistryAccess.EMPTY));
     }
 
     private static int getExperienceFromItem(ItemStack stack) {
@@ -91,7 +93,7 @@ public class PollenGrindstoneCategory implements IRecipeCategory<PollenGrindston
     }
 
     @Override
-    public void draw(PollenGrindstoneRecipe recipe, IRecipeSlotsView view, PoseStack matrixStack, double mouseX, double mouseY) {
+    public void draw(PollenGrindstoneRecipe recipe, IRecipeSlotsView view, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         int experience = recipe.getResultExperience();
 
         if (experience == -1) {
@@ -107,7 +109,7 @@ public class PollenGrindstoneCategory implements IRecipeCategory<PollenGrindston
         if (experience > 0) {
             Component experienceString = Component.translatable("gui.jei.category." + Pollen.MOD_ID + ".grindstone.experience", (int) Math.ceil((double) experience / 2.0), experience);
             Font font = Minecraft.getInstance().font;
-            font.draw(matrixStack, experienceString, background.getWidth() - font.width(experienceString), 0, 0xFF808080);
+            guiGraphics.drawString(font, experienceString, background.getWidth() - font.width(experienceString), 0, 0xFF808080);
         }
     }
 

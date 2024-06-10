@@ -5,6 +5,8 @@ import gg.moonflower.pollen.api.crafting.v1.PollenBrewingRecipe;
 import gg.moonflower.pollen.api.crafting.v1.PollenRecipeTypes;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -42,27 +44,27 @@ public class PollenBrewingRecipeImpl implements PollenBrewingRecipe {
     @ApiStatus.Internal
     public static PollenBrewingRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
         String group = GsonHelper.getAsString(jsonObject, "group", "");
-        Potion from = Registry.POTION.get(new ResourceLocation(GsonHelper.getAsString(jsonObject, "from")));
+        Potion from = BuiltInRegistries.POTION.get(new ResourceLocation(GsonHelper.getAsString(jsonObject, "from")));
         Ingredient ingredient = Ingredient.fromJson(GsonHelper.getAsJsonObject(jsonObject, "ingredient"));
-        Potion result = Registry.POTION.get(new ResourceLocation(GsonHelper.getAsString(jsonObject, "result")));
+        Potion result = BuiltInRegistries.POTION.get(new ResourceLocation(GsonHelper.getAsString(jsonObject, "result")));
         return new PollenBrewingRecipeImpl(resourceLocation, group, from, ingredient, result);
     }
 
     @ApiStatus.Internal
     public static PollenBrewingRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
         String group = buf.readUtf();
-        Potion from = Registry.POTION.get(buf.readResourceLocation());
+        Potion from = BuiltInRegistries.POTION.get(buf.readResourceLocation());
         Ingredient ingredient = Ingredient.fromNetwork(buf);
-        Potion result = Registry.POTION.get(buf.readResourceLocation());
+        Potion result = BuiltInRegistries.POTION.get(buf.readResourceLocation());
         return new PollenBrewingRecipeImpl(id, group, from, ingredient, result);
     }
 
     @ApiStatus.Internal
     public static void toNetwork(FriendlyByteBuf buf, PollenBrewingRecipe recipe) {
         buf.writeUtf(recipe.getGroup());
-        buf.writeResourceLocation(Registry.POTION.getKey(recipe.getFrom()));
+        buf.writeResourceLocation(BuiltInRegistries.POTION.getKey(recipe.getFrom()));
         recipe.getIngredient().toNetwork(buf);
-        buf.writeResourceLocation(Registry.POTION.getKey(recipe.getResult()));
+        buf.writeResourceLocation(BuiltInRegistries.POTION.getKey(recipe.getResult()));
     }
 
     public Potion getFrom() {

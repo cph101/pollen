@@ -21,12 +21,12 @@ import java.util.function.Supplier;
 @ApiStatus.Internal
 public class RegistrarPollinatedRegistryImpl<T> implements PollinatedRegistry<T> {
 
-    private final Supplier<Registries> registries;
+    private final Supplier<RegistrarManager> registries;
     private final Supplier<Registrar<T>> registrar;
     private final ResourceKey<Registry<T>> key;
 
     public RegistrarPollinatedRegistryImpl(ResourceKey<Registry<T>> key, @Nullable Consumer<RegistrarBuilder<T>> consumer) {
-        this.registries = Suppliers.memoize(() -> Registries.get(this.getModId()));
+        this.registries = Suppliers.memoize(() -> RegistrarManager.get(this.getModId()));
         this.registrar = Suppliers.memoize(() -> {
             RegistrarBuilder<T> builder = this.registries.get().builder(key.location());
             if (consumer != null) {
@@ -69,7 +69,7 @@ public class RegistrarPollinatedRegistryImpl<T> implements PollinatedRegistry<T>
     }
 
     @Override
-    public Registries getRegistries() {
+    public RegistrarManager getRegistries() {
         return this.registries.get();
     }
 

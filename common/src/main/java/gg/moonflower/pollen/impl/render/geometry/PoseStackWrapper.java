@@ -1,14 +1,11 @@
 package gg.moonflower.pollen.impl.render.geometry;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import gg.moonflower.pinwheel.api.transform.MatrixStack;
 import gg.moonflower.pollen.api.joml.v1.JomlBridge;
 import org.jetbrains.annotations.ApiStatus;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Quaternionfc;
+import org.joml.*;
 
 @ApiStatus.Internal
 public class PoseStackWrapper implements MatrixStack {
@@ -36,27 +33,27 @@ public class PoseStackWrapper implements MatrixStack {
 
     @Override
     public void rotate(Quaternionfc rotation) {
-        this.poseStack.mulPose(new Quaternion(rotation.x(), rotation.y(), rotation.z(), rotation.w()));
+        this.poseStack.mulPose(new Quaternionf(rotation));
     }
 
     @Override
     public void rotate(float amount, float x, float y, float z) {
         this.axis.set(x, y, z);
-        this.poseStack.mulPose(new Quaternion(this.axis, amount, false));
+        this.poseStack.mulPose(JomlBridge.quaternionFromAxisAngle(this.axis, amount, false));
     }
 
     @Override
     public void rotateXYZ(float x, float y, float z) {
-        this.poseStack.mulPose(Vector3f.XP.rotation(x));
-        this.poseStack.mulPose(Vector3f.YP.rotation(y));
-        this.poseStack.mulPose(Vector3f.ZP.rotation(z));
+        this.poseStack.mulPose(Axis.XP.rotation(x));
+        this.poseStack.mulPose(Axis.YP.rotation(y));
+        this.poseStack.mulPose(Axis.ZP.rotation(z));
     }
 
     @Override
     public void rotateZYX(float z, float y, float x) {
-        this.poseStack.mulPose(Vector3f.ZP.rotation(z));
-        this.poseStack.mulPose(Vector3f.YP.rotation(y));
-        this.poseStack.mulPose(Vector3f.XP.rotation(x));
+        this.poseStack.mulPose(Axis.ZP.rotation(z));
+        this.poseStack.mulPose(Axis.YP.rotation(y));
+        this.poseStack.mulPose(Axis.XP.rotation(x));
     }
 
     @Override
@@ -76,11 +73,11 @@ public class PoseStackWrapper implements MatrixStack {
 
     @Override
     public Matrix4f position() {
-        return JomlBridge.set(new Matrix4f(), this.poseStack.last().pose());
+        return this.poseStack.last().pose();
     }
 
     @Override
     public Matrix3f normal() {
-        return JomlBridge.set(new Matrix3f(), this.poseStack.last().normal());
+        return this.poseStack.last().normal();
     }
 }

@@ -6,6 +6,8 @@ import gg.moonflower.pollen.api.network.v1.packet.PollinatedPacket;
 import gg.moonflower.pollen.api.network.v1.packet.PollinatedPacketDirection;
 import gg.moonflower.pollen.api.network.v1.packet.login.PollinatedLoginPacket;
 import gg.moonflower.pollen.core.extensions.fabric.ServerLoginPacketListenerImplExtension;
+import gg.moonflower.pollen.impl.mixin.client.ClientPacketListenerAccessor;
+import gg.moonflower.pollen.impl.mixin.ServerLoginPacketListenerImplAccessor;
 import gg.moonflower.pollen.impl.network.context.fabric.PollinatedFabricLoginPacketContext;
 import gg.moonflower.pollen.impl.network.context.fabric.PollinatedFabricPacketContext;
 import gg.moonflower.pollen.impl.registry.network.PollinatedNetworkRegistryImpl;
@@ -54,7 +56,7 @@ public class PollinatedFabricLoginChannel extends PollinatedNetworkChannelImpl i
             // Don't wait because the player is already being placed into the level
         }, responseSender));
 
-        ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> this.loginPackets.stream().flatMap(function -> function.apply(handler.getConnection().isMemoryConnection()).stream()).forEach(pair -> {
+        ServerLoginConnectionEvents.QUERY_START.register((handler, server, sender, synchronizer) -> this.loginPackets.stream().flatMap(function -> function.apply(((ServerLoginPacketListenerImplAccessor)handler).getConnection().isMemoryConnection()).stream()).forEach(pair -> {
             Packet<?> packet = sender.createPacket(this.channelId, this.serialize((PollinatedPacket<?>) pair.getValue(), PollinatedPacketDirection.LOGIN_CLIENTBOUND));
             if (packet instanceof ClientboundCustomQueryPacket) {
                 ((ServerLoginPacketListenerImplExtension) handler).pollen$trackPacket((ClientboundCustomQueryPacket) packet);
@@ -72,7 +74,7 @@ public class PollinatedFabricLoginChannel extends PollinatedNetworkChannelImpl i
                 t.printStackTrace();
                 future.completeExceptionally(t);
             }
-        }, listener.getConnection(), __ -> {
+        }, ((ClientPacketListenerAccessor)listener).getConnection(), __ -> {
         }, PollinatedPacketDirection.LOGIN_CLIENTBOUND), this.clientMessageHandler);
         return future;
     }
@@ -89,7 +91,7 @@ public class PollinatedFabricLoginChannel extends PollinatedNetworkChannelImpl i
             return;
         }
 
-        PollinatedNetworkRegistryImpl.processMessage(this.deserialize(data, PollinatedPacketDirection.LOGIN_SERVERBOUND), new PollinatedFabricPacketContext(listener.getConnection(), synchronizer, PollinatedPacketDirection.LOGIN_SERVERBOUND) {
+        PollinatedNetworkRegistryImpl.processMessage(this.deserialize(data, PollinatedPacketDirection.LOGIN_SERVERBOUND), new PollinatedFabricPacketContext(((ServerLoginPacketListenerImplAccessor)listener).getConnection(), synchronizer, PollinatedPacketDirection.LOGIN_SERVERBOUND) {
             @Override
             public void reply(PollinatedPacket<?> packet) {
                 throw new UnsupportedOperationException("The server is not allowed to reply during the login phase.");

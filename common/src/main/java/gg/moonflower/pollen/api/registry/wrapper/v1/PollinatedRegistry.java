@@ -3,6 +3,7 @@ package gg.moonflower.pollen.api.registry.wrapper.v1;
 import dev.architectury.registry.registries.*;
 import gg.moonflower.pollen.impl.registry.wrapper.RegistrarPollinatedRegistryImpl;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -28,7 +29,7 @@ public interface PollinatedRegistry<T> {
 
     Iterator<RegistrySupplier<T>> iterator();
 
-    Registries getRegistries();
+    RegistrarManager getRegistries();
 
     Registrar<T> getRegistrar();
 

@@ -3,6 +3,7 @@ package gg.moonflower.pollen.core.fabric;
 import gg.moonflower.pollen.api.config.v1.PollinatedConfigType;
 import gg.moonflower.pollen.api.event.entity.v1.EntityTrackingEvent;
 import gg.moonflower.pollen.api.event.level.v1.ServerChunkLoadingEvent;
+import gg.moonflower.pollen.api.registry.wrapper.v1.AccessibleLevelResource;
 import gg.moonflower.pollen.core.Pollen;
 import gg.moonflower.pollen.core.network.PollenMessages;
 import gg.moonflower.pollen.core.network.fabric.ClientboundSyncConfigDataPacket;
@@ -23,7 +24,7 @@ import java.nio.file.Path;
 
 public class PollenFabric implements ModInitializer {
 
-    private static final LevelResource SERVERCONFIG = new LevelResource("serverconfig");
+    private static final LevelResource SERVERCONFIG = new AccessibleLevelResource("serverconfig");
 
     private static Path getServerConfigPath(MinecraftServer server) {
         Path serverConfig = server.getWorldPath(SERVERCONFIG);

@@ -10,10 +10,4 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = Pollen.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class PollenForgeClient {
-
-    @SubscribeEvent
-    public static void registerSprites(TextureStitchEvent.Pre event) {
-        TextureAtlas atlas = event.getAtlas();
-        RegisterAtlasSpriteEvent.event(atlas.location()).invoker().registerSprites(atlas, event::addSprite);
-    }
 }

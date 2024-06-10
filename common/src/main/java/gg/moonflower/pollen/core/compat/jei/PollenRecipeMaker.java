@@ -11,6 +11,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
@@ -42,8 +44,8 @@ public final class PollenRecipeMaker {
 
         List<PollenGrindstoneRecipe> recipes = getRecipes(clientLevel.getRecipeManager(), category, PollenRecipeTypes.GRINDSTONE_TYPE.get());
         RegistryAccess registryAccess = clientLevel.registryAccess();
-        Registry<Item> itemRegistry = registryAccess.registryOrThrow(Registry.ITEM_REGISTRY);
-        Registry<Enchantment> enchantmentRegistry = registryAccess.registryOrThrow(Registry.ENCHANTMENT_REGISTRY);
+        Registry<Item> itemRegistry = registryAccess.registryOrThrow(Registries.ITEM);
+        Registry<Enchantment> enchantmentRegistry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
 
         Collection<ItemStack> ingredients = ingredientManager.getAllIngredients(VanillaTypes.ITEM_STACK);
         for (ItemStack ingredient : ingredients) {
@@ -52,7 +54,7 @@ public final class PollenRecipeMaker {
             }
 
             ResourceLocation id = itemRegistry.getKey(ingredient.getItem());
-            if (id == null || id == Registry.ITEM.getDefaultKey()) {
+            if (id == null || id == BuiltInRegistries.ITEM.getDefaultKey()) {
                 continue;
             }
 
